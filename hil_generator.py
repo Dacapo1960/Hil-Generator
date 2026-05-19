@@ -34,6 +34,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ── API Key sicher laden (funktioniert mit und ohne secrets.toml) ──────────────
+
+def get_default_api_key() -> str:
+    try:
+        return st.secrets.get("ANTHROPIC_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    except Exception:
+        return os.environ.get("ANTHROPIC_API_KEY", "")
+
 # ── Systemfarben ───────────────────────────────────────────────────────────────
 
 HEADER_BG  = "#1F3864"
@@ -249,7 +257,7 @@ with st.sidebar:
     api_key = st.text_input(
         "Anthropic API Key",
         type="password",
-        value=st.secrets.get("ANTHROPIC_API_KEY", os.environ.get("ANTHROPIC_API_KEY", "")),
+        value=get_default_api_key(),
         help="Von console.anthropic.com · sk-ant-…",
     )
 
